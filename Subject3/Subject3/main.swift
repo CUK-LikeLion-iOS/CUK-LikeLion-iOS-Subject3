@@ -38,8 +38,8 @@ class Person {
         print("\(self.healthiness)로 변경되었습니다.")
     }
     
-    func changeBudgets(pay: Int) {
-        self.budgets += pay
+    func changeBudgets(price: Int) {
+        self.budgets += price
     }
     
     func eat(food: String) {
@@ -55,23 +55,19 @@ class Person {
     func work(for hours: Int) {
         print("\(name)씨가 \(hours)시간 동안 일을 합니다.")
         changeHealthiness(from: hours * -2, to: -hours)
-        changeBudgets(pay: hours * 20000)
+        changeBudgets(price: hours * 20000)
     }
     
     // 물건을 살 수 있는지
-    func hasEnoughMoney(price: Int) -> Bool {
-        guard (self.budgets >= price) else {
-            return false
-        }
-        return true
+    func balance(price: Int) -> Int {
+        return self.budgets - price
     }
     
     // 물건을 산다
     func purchase(stuffName: String, price: Int) {
         print("\(self.name)씨가 \(stuffName)을 \(price)원에 구매했습니다.")
-        self.budgets -= price
+        changeBudgets(price: -price)
     }
-    
 }
 
 
@@ -95,14 +91,17 @@ struct CoffeeShop {
     
     mutating func order(coffee: Coffee, by customer: Person) {
         let coffeeName = coffee.rawValue
+        let customerBalance: Int
         
         guard let coffeePrice = self.menu[coffee] else {
             print("그런 거 안팝니다.")
             return
         }
         
-        guard customer.hasEnoughMoney(price: coffeePrice) else {
-            print("외상 안됩니다.")
+        customerBalance = customer.balance(price: coffeePrice)
+        
+        guard customerBalance >= 0 else {
+            print("잔액이 \(-customerBalance)원만큼 부족합니다.")
             return
         }
         
@@ -111,15 +110,13 @@ struct CoffeeShop {
         
         print("바리스타 \(self.barista.name)씨가 \(coffeeName)을(를) 만들고 있습니다.")
         
-        finishMakingCoffee(coffee: coffee)
+        finishMakingCoffee(coffee: coffee, customer: customer)
         takeoutCoffee(coffee: coffee, by: customer)
     }
     
     // 커피 완성 후 테이블에 내놓기
-    mutating func finishMakingCoffee(coffee: Coffee) {
-        let coffeeName = coffee.rawValue
-        
-        print("\(coffeeName) 제작을 완료했습니다.")
+    mutating func finishMakingCoffee(coffee: Coffee, customer: Person) {
+        print("\(customer.name)님의 커피가 준비되었습니다. 픽업대에서 가져가주세요.")
         self.pickUpTable[coffee]! += 1
     }
     
@@ -140,8 +137,8 @@ struct CoffeeShop {
 
 
 // main
-let misterLee = Person(name: "이철수", age: 28)
-let missKim = Person(name: "김영희", age: 28)
+let misterLee = Person(name: "misterLee", age: 28)
+let missKim = Person(name: "missKim", age: 28)
 
 var mutsabucks = CoffeeShop(barista: misterLee,
                             menu: [.americano: 3000, .latte: 4000, .cappucino: 2000, .frappe: 4500])
