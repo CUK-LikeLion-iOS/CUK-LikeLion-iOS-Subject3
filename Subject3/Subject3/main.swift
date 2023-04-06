@@ -13,7 +13,7 @@ class Person {
     name: String,
     age: Int
     
-    var
+    private var
     budgets: Int = 10000,
     healthiness: Int = 100
     
@@ -22,7 +22,7 @@ class Person {
             self.age = age
     }
     
-    func changeHealthiness(from bottom: Int, to top: Int) {
+    private func changeHealthiness(from bottom: Int, to top: Int) {
         let changedHealthiness = Int.random(in: bottom...top)
         
         print("HP가 \(self.healthiness)에서")
@@ -38,7 +38,7 @@ class Person {
         print("\(self.healthiness)로 변경되었습니다.")
     }
     
-    func changeBudgets(price: Int) {
+    private func changeBudgets(price: Int) {
         self.budgets += price
     }
     
@@ -72,11 +72,11 @@ class Person {
 
 
 struct CoffeeShop {
-    let
+    private let
     barista: Person,
     menu: [Coffee: Int] //커피: 가격
     
-    var
+    private var
     sales: Int = 0,
     pickUpTable = [Coffee: Int]() //테이블 위 커피: 개수
     
@@ -115,16 +115,26 @@ struct CoffeeShop {
     }
     
     // 커피 완성 후 테이블에 내놓기
-    mutating func finishMakingCoffee(coffee: Coffee, customer: Person) {
+    private mutating func finishMakingCoffee(coffee: Coffee, customer: Person) {
+        guard var coffeeOnTable = self.pickUpTable[coffee] else {
+            print("팔지 않는 커피입니다.")
+            return
+        }
+        
         print("\(customer.name)님의 커피가 준비되었습니다. 픽업대에서 가져가주세요.")
         self.pickUpTable[coffee]! += 1
     }
     
     // 커피 가져가기
-    mutating func takeoutCoffee(coffee: Coffee, by customer: Person) {
+    private mutating func takeoutCoffee(coffee: Coffee, by customer: Person) {
         let coffeeName = coffee.rawValue
         
-        guard pickUpTable[coffee]! > 0 else {
+        guard let coffeeOnTable = self.pickUpTable[coffee] else {
+            print("팔지 않는 커피입니다.")
+            return
+        }
+        
+        guard coffeeOnTable > 0 else {
             print("테이블에 \(coffeeName)(이)가 없습니다.")
             return
         }
@@ -140,7 +150,11 @@ struct CoffeeShop {
 let misterLee = Person(name: "misterLee", age: 28)
 let missKim = Person(name: "missKim", age: 28)
 
+missKim.work(for: 8)
+missKim.eat(food: "햄버거")
+missKim.sleep(for: 7)
+
 var mutsabucks = CoffeeShop(barista: misterLee,
                             menu: [.americano: 3000, .latte: 4000, .cappucino: 2000, .frappe: 4500])
 
-mutsabucks.order(coffee: .americano, by: missKim)
+mutsabucks.order(coffee: .frappe, by: missKim)
