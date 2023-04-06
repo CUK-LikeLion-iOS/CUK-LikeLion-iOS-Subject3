@@ -5,57 +5,100 @@
 //  Created by Jinyoung Yoo on 2023/03/30.
 //
 
-import Foundation
+import Darwin
 
 enum Coffee: String {
     case espresso, americano, cafeLatte, cappucino
 }
 
 struct Person {
-    var money: Int
+    fileprivate var money: Int
+    fileprivate var name: String
     
-     mutating func buy(stuff: String, price: Int) {
+    
+    init(money: Int, name: String) {
+        self.money = money
+        self.name = name
+    }
+    
+     mutating func buyCoffee(coffee: Coffee, at coffeeShop: inout CoffeeShop) {
+        print("\(self.name): \(coffee) 얼마에요?")
+        
+        let price: Int = coffeeShop.coffeePrice(coffee: coffee)
         let balance: Int = self.money - price
         
         if (balance < 0) {
-            print("\(stuff) 살 돈이 없는데 네고 가능한가요..?ㅠㅠㅠ")
+            print("\(self.name): 어라...? 잔액이 \(-balance)원 만큼 부족하네요.. 다음에 올께요ㅠㅠ")
         }
-        else {
-            print("\(stuff) 살께요!")
+        else if (balance >= 0) {
+            coffeeShop.order(coffee: coffee)
             self.money = balance
+            print("(\(self.name) 잔고: \(self.money) 원)")
         }
     }
 }
 
 struct CoffeeShop {
-    var revenue: Int
-    let menu: [Coffee: Int] = [.espresso: 1000, .americano: 1500, .cafeLatte: 2000]
-    var pickUpTable: Bool
-    var barista: Person
+    fileprivate var name: String
+    fileprivate var barista: Person
 
+    private var menu: [Coffee: Int] = [.espresso: 1000, .americano: 1500, .cafeLatte: 2000]
+    private var revenue: Int = 0
+    private var pickUpTable: Bool = false {
+        didSet {
+            if (self.pickUpTable) {
+                print("\(self.barista.name): 커피가 준비되었습니다. 픽업대에서 가져가주세요.")
+            }
+        }
+    }
     
-    mutating func takeOrder(coffee: Coffee) {
-
+    init(name: String, barista: Person) {
+        self.name = name
+        self.barista = barista
+    }
+    
+    /*  ----------------- FILTERPRIVATE METHODs ----------------------  */
+    
+    fileprivate mutating func order(coffee: Coffee) {
+        
         guard let price = self.menu[coffee] else {
-            print("메뉴판에 없는 커피를 주문하셨네요,,, 다른 메뉴를 골라주세요!")
+            print("\(self.name): 저희 가게에는 안 파는 커피에요!")
             return
         }
         
-        print("\(price)원 받았습니다! 커피가 다 만들어지면 픽업 테이블에서 받아가세요!")
+        print("\(self.name): \(coffee) 주문 받았습니다! 조금만 기다려주세요~")
 
-        if (self.pickUpTable) {
-            print("(대충 픽업 테이블 비우는 중.....)")
-            self.pickUpTable = false
-        }
-        
-        self.provideCoffee()
         self.revenue += price
+        print("(\(self.name) 매출액: \(self.revenue)원)")
+
+        makingCoffee(coffee: coffee)
+        serveCoffee()
     }
     
-
-    mutating func provideCoffee() {
-        print("주문하신 커피가 나왔습니다!")
+    // 커피 가격 반환
+    fileprivate func coffeePrice(coffee: Coffee) -> Int {
         
+        guard let price = self.menu[coffee] else {
+            return 0
+        }
+        
+        print("\(self.name): \(price)원 입니다!")
+        return price
+    }
+    
+    
+    /*  ----------------- PRIVATE METHODs----------------------  */
+
+    private func makingCoffee(coffee: Coffee) {
+        print("\(self.barista.name): (\(coffee) 만드는 중", terminator: "")
+        for _ in 1...4 {
+            sleep(1)
+            print(".", terminator: "")
+        }
+        print(")")
+    }
+    
+    private mutating func serveCoffee() {
         self.pickUpTable = true
     }
 }

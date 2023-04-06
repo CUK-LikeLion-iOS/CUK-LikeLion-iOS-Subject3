@@ -8,14 +8,14 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "D13FE1C4-74B3-416A-A2BA-52FE1A41CDFB"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "cuk-likelion-ios-subject3/Type.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "61"
-            endingLineNumber = "61"
+            startingLineNumber = "104"
+            endingLineNumber = "104"
             landmarkName = "CoffeeShop"
             landmarkType = "14">
          </BreakpointContent>
