@@ -24,14 +24,14 @@ struct Person {
      mutating func buyCoffee(coffee: Coffee, at coffeeShop: inout CoffeeShop) {
         print("\(self.name): \(coffee) 얼마에요?")
         
-        let price: Int = coffeeShop.coffeePrice(coffee: coffee)
+        let price: Int = coffeeShop.coffeePrice(coffee: coffee) // coffeeShop에서 가격 받아옴
         let balance: Int = self.money - price
         
         if (balance < 0) {
             print("\(self.name): 어라...? 잔액이 \(-balance)원 만큼 부족하네요.. 다음에 올께요ㅠㅠ")
         }
         else if (balance >= 0) {
-            coffeeShop.order(coffee: coffee)
+            coffeeShop.order(coffee: coffee) // coffeeShop에다 주문
             self.money = balance
             print("(\(self.name) 잔고: \(self.money) 원)")
         }
