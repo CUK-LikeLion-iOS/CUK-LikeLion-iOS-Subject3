@@ -7,31 +7,19 @@
 
 import Foundation
 
-var misterLee: Person = Person(money: 10000)
-var missKim: Person = Person(money: 3000)
+var misterLee: Person = Person(money: 10000, name: "misterLee")
+var missKim: Person = Person(money: 3000, name: "missKim")
 
-var mutsabucks: CoffeeShop = CoffeeShop(revenue: 0, pickUpTable: false, barista: misterLee)
+var mutsabucks: CoffeeShop = CoffeeShop(name: "mustabucks", barista: misterLee)
 
-missKim.buy(stuff: "컴퓨터", price: 2000)
-print("잔액: \(missKim.money)원")
+missKim.buyCoffee(coffee: .espresso, at: &mutsabucks)
 
-print("---------------------------------")
+print("--------------------------------------------------")
 
-missKim.buy(stuff: "냉장고", price: 3000)
+missKim.buyCoffee(coffee: .americano, at: &mutsabucks)
 
-print("---------------------------------")
+print("--------------------------------------------------")
 
-mutsabucks.takeOrder(coffee: .cappucino)
-print("매출액: \(mutsabucks.revenue)원")
+missKim.buyCoffee(coffee: .cappucino, at: &mutsabucks)
 
-print("---------------------------------")
-
-mutsabucks.takeOrder(coffee: .americano)
-print("매출액: \(mutsabucks.revenue)원")
-
-print("---------------------------------")
-
-mutsabucks.takeOrder(coffee: .cafeLatte)
-print("매출액: \(mutsabucks.revenue)원")
-
-
+print("--------------------------------------------------")
