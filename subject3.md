@@ -1,6 +1,3 @@
-
-struct , class = 기능집합
-
 ## 클래스와 구조체
 
 ![](https://velog.velcdn.com/images%2Fmarintelli%2Fpost%2Fec624f42-306e-401a-974c-e3fc7ca30733%2Fimage.png)
@@ -127,6 +124,76 @@ print(clsBB.a) // 20
 
 ```
 
-깊은복사 : 
+깊은복사 :
 
 얕은복사 : 값만 복사를 하는 것
+
+---
+
+#### inout 이란 ?
+
+기본적으로 함수 내부에서 파라미터로 전달된 인스턴스는 상수타입이다.
+따라서 customer는 상수 타입이고 buy 메소드는 mutating 로 되어있다.
+buy는 mutating 메소드 이기 때문에 상수를 변경할 수 없다. 이를 해결하기 위해서 inout 키워드 사용
+
+inout 은 함수 내부에서 매개변수의 값을 변경하고 이를 함수 외부에서도 유지할 때 사용. 즉 , 함수 호출 시 매개변수에 전달되는 값을
+함수 내부에서 직접 수정할 수 있도록 한다.
+
+```swift
+
+import Foundation
+struct Person {
+
+    var money : Int
+    var name : String
+
+    mutating func buy (price : Int) // 구매했을때 돈을 차감시켜줌
+    {
+        money = money - price
+    }
+
+}
+
+struct CoffeeShop {
+
+    var sales : Int
+    var barista : Person?
+    var menu : [Coffee : Int]?
+    var pickUpTable : [Coffee] = []
+
+    mutating func order (coffee : Coffee ,customer : Person)  {
+
+            customer.buy(price: coffeePrice) // 가능할까 ??
+    }
+
+}
+
+```
+
+---
+
+inout , class = 모두 참조타입
+
+1. inout : 값을 복사하지 않고 인자로 전달된 변수의 메모리 주소를 참조하여 해당 변수의 값을 변경
+
+   - 값 타입인 구조체나 열거형 타입에서만 사용 가능
+
+2. class : 변수나 상수가 인스턴스를 참조하기 때문에 함수 내에서 인스턴스의 내용을 수정할 수 있다.
+
+-> 즉 값 타입에서는 Inout 키워드를 사용해야 하지만, 참조타입에서는 그냥 인스턴스를 전달하면 된다.
+
+```swift
+var a = 10
+var b = 20
+
+func swap(_ a: inout Int, _ b: inout Int) {
+    let temp = a
+    a = b
+    b = temp
+}
+
+swap(&a, &b) // & 기호는 해당 변수의 메모리 주소를 전달하기 위한 기호이다. 인자로 전달할 때 & 기호를 붙여줘야 한다.
+
+```
+
+---
